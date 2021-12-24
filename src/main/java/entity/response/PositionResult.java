@@ -105,5 +105,5 @@ public class PositionResult {
     /**
      * 备用字段
      */
-    private Long extend;
+    private Object extend;
 }
