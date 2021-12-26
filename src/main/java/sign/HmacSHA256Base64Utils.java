@@ -73,7 +73,8 @@ public class HmacSHA256Base64Utils {
      * @param secretKey   api密钥
      * @return
      */
-    public static String sign(Object timestamp, String method, String requestPath, Map<String, Object> params, String apiKey, String secretKey)
+    public static String sign(Object timestamp, String method, String requestPath, Map<String, Object>
+            params, String apiKey, String secretKey)
             throws UnsupportedEncodingException, CloneNotSupportedException, InvalidKeyException {
         if (apiKey == null || secretKey == null) {
             throw new RuntimeException("apiKey/secretKey must not be null !");

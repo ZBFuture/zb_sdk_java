@@ -63,4 +63,9 @@ public class DateLocalUtil {
         return toUTC(new Date());
     }
 
+    public static void main(String[] args) {
+        System.out.println(toUTC());
+        System.out.println(new Date());
+    }
+
 }

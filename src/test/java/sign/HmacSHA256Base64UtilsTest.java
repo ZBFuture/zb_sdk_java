@@ -22,4 +22,18 @@ class HmacSHA256Base64UtilsTest {
         System.out.println(ts);
         System.out.println(sign);
     }
+
+    @Test
+    void sign2() throws UnsupportedEncodingException, CloneNotSupportedException, InvalidKeyException {
+        String ts = DateLocalUtil.toUTC();
+        ts = "2021-01-05T14:05:28.616Z";
+        HashMap para = new HashMap();
+        para.put("orderId", "1234567890");
+        para.put("symbol", "BTC_USDT");
+        String digest = EncryDigestUtil.digest("ceb892e0-0367-4cc1-88d1-ef9289feb053");
+        String sign = HmacSHA256Base64Utils.sign(ts, "GET", "/Server/api/v1/trade/getOrder", para, "wewer", digest);
+        System.out.println(ts);
+        System.out.println(sign);
+    }
+
 }

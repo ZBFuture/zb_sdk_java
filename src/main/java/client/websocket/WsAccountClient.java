@@ -429,7 +429,8 @@ public class WsAccountClient extends WebSocketListener {
         if (futuresAccountType != null) {
             map.put("futuresAccountType", futuresAccountType);
         }
-
+//{"action":"subscribe","channel":"Positions.change","futuresAccountType":1,"symbol":"ZETH_ZUSD"}
+        System.out.println("SUB REQ:" + JSON.toJSONString(map));
         this.webSocket.send(JSON.toJSONString(map));
         this.Handlers.put(channel, handler);
     }
@@ -466,8 +467,17 @@ public class WsAccountClient extends WebSocketListener {
     }
 
     private void handle(String text) {
-        System.out.println(text);
-
+        System.out.println("onMessage:" + text);
+//{"channel":"Positions.change",
+// "data":{"userId":"6837964014404825088","marketId":"108","marketName":"ZETH_ZUSD",
+// "side":0,"leverage":15,"amount":"0.1","avgPrice":"3937.12","liquidatePrice":"4197.05",
+// "margin":"28.09151251","marginMode":1,"positionsMode":2,"status":1,"unrealizedPnl":"-15.431",
+// "marginBalance":"12.66051251","maintainMargin":"2.045715","marginRate":"0.161582","liquidateLevel":1,
+// "nominalValue":"393.753","freezeAmount":"0","freezeList":[{"currencyName":"zusd","currencyId":"9","amount":"28.09151251",
+// "modifyTime":"1640271949792"}],"autoLightenRatio":"0","originAppendAmount":"0","appendAmount":"0","marginAppendCount":0,
+// "lastAppendAmount":"0","returnRate":"-0.5879","originId":"6879799200100591651","bankruptcyPrice":"4218.03",
+// "modifyTime":"1640325002507","refreshType":"Timer","contractType":1,"id":"6838307095813761089","createTime":"1640271949792",
+// "extend":{}}}
         WSResponse wsResponse = JSON.parseObject(text, WSResponse.class);
         String channel = wsResponse.getChannel();
         Handler handler = this.Handlers.get(channel);
@@ -497,7 +507,8 @@ public class WsAccountClient extends WebSocketListener {
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         super.onFailure(webSocket, t, response);
-        System.out.println("onFailure");
+        System.out.println("onFailure" + response);
+        System.out.println(t);
         System.out.println(t.toString());
     }
 }
