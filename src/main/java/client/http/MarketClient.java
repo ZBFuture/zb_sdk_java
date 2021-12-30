@@ -1,10 +1,13 @@
 package client.http;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import entity.HttpResponse;
 import entity.response.*;
 import okhttp3.Request;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +24,10 @@ public class MarketClient extends HttpClient {
         }
 
         Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/Server/api/v2/config/marketList" + build.buildUrl());
+        String contractType = "";
+        if (futuresAccountType == 2)
+            contractType = "/qc";
+        builder.url(endpoint + contractType + "/Server/api/v2/config/marketList" + build.buildUrl());
         Request request = builder.build();
 
         HttpResponse<List<MarketConfig>> response = call(request, new TypeReference<>() {
@@ -30,13 +36,11 @@ public class MarketClient extends HttpClient {
     }
 
     public Depth WholeDepth(String symbol, Integer size) {
-        UrlParamsBuilder build = UrlParamsBuilder.build()
-                .putToUrl("symbol", symbol)
-                .putToUrl("size", size);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
+        param.put("size", size);
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/depth" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/depth", param);
 
         HttpResponse<Depth> response = call(request, new TypeReference<>() {
         });
@@ -56,13 +60,11 @@ public class MarketClient extends HttpClient {
     }
 
     public List<List> trade(String symbol, Integer size) {
-        UrlParamsBuilder build = UrlParamsBuilder.build()
-                .putToUrl("symbol", symbol)
-                .putToUrl("size", size);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
+        param.put("size", size);
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/trade" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/trade", param);
 
         HttpResponse<List<List>> response = call(request, new TypeReference<>() {
         });
@@ -70,14 +72,12 @@ public class MarketClient extends HttpClient {
     }
 
     public Map ticker(String symbol) {
-        UrlParamsBuilder build = UrlParamsBuilder.build();
+        Map<String, Object> param = new HashMap<>();
         if (symbol != null) {
-            build.putToUrl("symbol", symbol);
+            param.put("symbol", symbol);
         }
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/ticker" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/ticker", param);
 
         HttpResponse<Map> response = call(request, new TypeReference<>() {
         });
@@ -93,11 +93,10 @@ public class MarketClient extends HttpClient {
     }
 
     public FundingRate fundingRate(String symbol) {
-        UrlParamsBuilder build = UrlParamsBuilder.build().putToUrl("symbol", symbol);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/fundingRate" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/fundingRate", param);
 
         HttpResponse<FundingRate> response = call(request, new TypeReference<>() {
         });
@@ -105,11 +104,10 @@ public class MarketClient extends HttpClient {
     }
 
     public String price(String type, String symbol) {
-        UrlParamsBuilder build = UrlParamsBuilder.build().putToUrl("symbol", symbol);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/" + type + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/" + type, param);
 
         HttpResponse<String> response = call(request, new TypeReference<>() {
         });
@@ -117,14 +115,12 @@ public class MarketClient extends HttpClient {
     }
 
     public List<List> kline(String type, String symbol, String period, Integer size) {
-        UrlParamsBuilder build = UrlParamsBuilder.build()
-                .putToUrl("symbol", symbol)
-                .putToUrl("period", period)
-                .putToUrl("size", size.toString());
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
+        param.put("period", period);
+        param.put("size", size);
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/" + type + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/" + type, param);
 
         HttpResponse<List<List>> response = call(request, new TypeReference<>() {
         });
@@ -133,14 +129,12 @@ public class MarketClient extends HttpClient {
 
 
     public List<PremiumIndexItem> premiumIndex(String symbol) {
-        UrlParamsBuilder build = UrlParamsBuilder.build();
+        Map<String, Object> param = new HashMap<>();
         if (symbol != null) {
-            build.putToUrl("symbol", symbol);
+            param.put("symbol", symbol);
         }
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/Server/api/v2/premiumIndex" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/Server/api/v2/premiumIndex", param);
 
         HttpResponse<List<PremiumIndexItem>> response = call(request, new TypeReference<>() {
         });
@@ -148,23 +142,21 @@ public class MarketClient extends HttpClient {
     }
 
     public List<FundingRateItem> fundingRateHistory(String symbol, Long startTime, Long endTime, Integer limit) {
-        UrlParamsBuilder build = UrlParamsBuilder.build();
+        Map<String, Object> param = new HashMap<>();
         if (symbol != null) {
-            build.putToUrl("symbol", symbol);
+            param.put("symbol", symbol);
         }
         if (startTime != null) {
-            build.putToUrl("startTime", startTime);
+            param.put("startTime", startTime);
         }
         if (endTime != null) {
-            build.putToUrl("endTime", endTime);
+            param.put("endTime", endTime);
         }
         if (limit != null) {
-            build.putToUrl("limit", limit);
+            param.put("limit", limit);
         }
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/fundingRate" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/fundingRate", param);
 
         HttpResponse<List<FundingRateItem>> response = call(request, new TypeReference<>() {
         });
@@ -172,22 +164,20 @@ public class MarketClient extends HttpClient {
     }
 
     public List<AllForceOrdersItem> allForceOrders(String symbol, Long startTime, Long endTime, Integer limit) {
-        UrlParamsBuilder build = UrlParamsBuilder.build();
-        build.putToUrl("symbol", symbol);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
 
         if (startTime != null) {
-            build.putToUrl("startTime", startTime);
+            param.put("startTime", startTime);
         }
         if (endTime != null) {
-            build.putToUrl("endTime", endTime);
+            param.put("endTime", endTime);
         }
         if (limit != null) {
-            build.putToUrl("limit", limit);
+            param.put("limit", limit);
         }
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/Server/api/v2/allForceOrders" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/Server/api/v2/allForceOrders", param);
 
         HttpResponse<List<AllForceOrdersItem>> response = call(request, new TypeReference<>() {
         });
@@ -197,23 +187,22 @@ public class MarketClient extends HttpClient {
     //大户账户数多空比
     //period: "5m","15m","30m","1h","2h","4h","6h","12h","1d"
     public List<TopLongShortAccountRatioItem> topLongShortAccountRatio(String symbol, String period, Long startTime, Long endTime, Integer limit) {
-        UrlParamsBuilder build = UrlParamsBuilder.build();
-        build.putToUrl("symbol", symbol);
-        build.putToUrl("period", period);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
+        param.put("symbol", symbol);
+        param.put("period", period);
 
         if (startTime != null) {
-            build.putToUrl("startTime", startTime);
+            param.put("startTime", startTime);
         }
         if (endTime != null) {
-            build.putToUrl("endTime", endTime);
+            param.put("endTime", endTime);
         }
         if (limit != null) {
-            build.putToUrl("limit", limit);
+            param.put("limit", limit);
         }
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/Server/api/v2/data/topLongShortAccountRatio" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/Server/api/v2/data/topLongShortAccountRatio", param);
 
         HttpResponse<List<TopLongShortAccountRatioItem>> response = call(request, new TypeReference<>() {
         });
@@ -223,23 +212,21 @@ public class MarketClient extends HttpClient {
     //大户持仓量多空比
     //period: "5m","15m","30m","1h","2h","4h","6h","12h","1d"
     public List<TopLongShortPositionRatioItem> topLongShortPositionRatio(String symbol, String period, Long startTime, Long endTime, Integer limit) {
-        UrlParamsBuilder build = UrlParamsBuilder.build();
-        build.putToUrl("symbol", symbol);
-        build.putToUrl("period", period);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
+        param.put("period", period);
 
         if (startTime != null) {
-            build.putToUrl("startTime", startTime);
+            param.put("startTime", startTime);
         }
         if (endTime != null) {
-            build.putToUrl("endTime", endTime);
+            param.put("endTime", endTime);
         }
         if (limit != null) {
-            build.putToUrl("limit", limit);
+            param.put("limit", limit);
         }
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/Server/api/v2/data/topLongShortPositionRatio" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/Server/api/v2/data/topLongShortPositionRatio", param);
 
         HttpResponse<List<TopLongShortPositionRatioItem>> response = call(request, new TypeReference<>() {
         });
@@ -248,16 +235,45 @@ public class MarketClient extends HttpClient {
 
     //zb现货兑换价格
     public String spotPrice(String side, String symbol) {
-        UrlParamsBuilder build = UrlParamsBuilder.build();
-        build.putToUrl("symbol", symbol);
-        build.putToUrl("side", side);
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", symbol);
+        param.put("side", side);
 
-        Request.Builder builder = new Request.Builder();
-        builder.url(endpoint + "/api/public/v1/spotPrice" + build.buildUrl());
-        Request request = builder.build();
+        Request request = buildRequest("/api/public/v1/spotPrice", param);
 
         HttpResponse<String> response = call(request, new TypeReference<>() {
         });
         return response.checkAndReturn();
+    }
+
+    private Request buildRequest(String path, Map<String, Object> param) {
+        Request.Builder builder = new Request.Builder();
+        UrlParamsBuilder urlParamsBuilder = UrlParamsBuilder.build();
+
+        String contractType = "";
+        String symbol = (String) param.get("symbol");
+        if (StringUtils.isNoneBlank(symbol)) {
+            String[] currencies = symbol.split("_");
+            if (!currencies[1].equalsIgnoreCase("USDT")) {
+                contractType = "/" + currencies[1].toLowerCase();
+            }
+        }
+
+        Map<String, String> map = mapObject2String(param);
+        map.forEach((k, v) -> urlParamsBuilder.putToUrl(k, v));
+        builder.url(endpoint + contractType + path + urlParamsBuilder.buildUrl());
+        return builder.build();
+    }
+
+    private Map<String, String> mapObject2String(Map<String, Object> para) {
+        Map<String, String> map = new HashMap();
+        para.forEach((k, v) -> {
+            if (v instanceof String) {
+                map.put(k, v.toString());
+            } else {
+                map.put(k, JSON.toJSONString(v));
+            }
+        });
+        return map;
     }
 }

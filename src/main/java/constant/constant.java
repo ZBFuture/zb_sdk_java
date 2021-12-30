@@ -3,8 +3,9 @@ package constant;
 public class constant {
     public static final int SUCCESS = 10000;
 
-    public static final int BASE_USDT = 1;//U本位
-    public static final int BASE_COIN = 2;//币本位
+    public static final int BASE_USDT = 1; //U本位
+    public static final int BASE_QC   = 2; //Q本位
+    public static final int BASE_COIN = 3; //币本位
 
     //convertUnit
     public static final String UNIT_CNY = "cny";

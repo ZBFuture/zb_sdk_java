@@ -24,7 +24,7 @@ public class AccountClient extends HttpClient {
     private String SecretKeySha1;//对SecretKey进行sha1加密后的字符串
 
     private String basePath = "/Server/api/v2";
-    private String gwUrl = endpoint + basePath;
+//    private String gwUrl = endpoint + basePath;
 
     Headers.Builder headersBuilder = new Headers.Builder();
 
@@ -47,25 +47,34 @@ public class AccountClient extends HttpClient {
         Map<String, String> para;
         if (queryPara != null) {
             para = mapObject2String(queryPara);
+            Integer futuresAccountType = Integer.valueOf(para.get("futuresAccountType"));
+            path = basePath + path;
+            if (futuresAccountType != null && futuresAccountType == 2)// Q本位合约
+                path = "/qc" + path;
 
             buildHeader("GET", path, para);
             para.forEach((k, v) -> urlParamsBuilder.putToUrl(k, v));
-            builder.url(gwUrl + path + urlParamsBuilder.buildUrl());
+            builder.url(endpoint + path + urlParamsBuilder.buildUrl());
         }
 
         if (bodyPara != null) {
             para = mapObject2String(bodyPara);
+            Integer futuresAccountType = Integer.valueOf(para.get("futuresAccountType"));
+            path = basePath + path;
+            if (futuresAccountType != null && futuresAccountType == 2)// Q本位合约
+                path = "/qc" + path;
 
             buildHeader("POST", path, para);
             headersBuilder.add("Content-Type", "application/json");
 
             para.forEach((k, v) -> urlParamsBuilder.putToPost(k, v));
-            builder.url(gwUrl + path);
+            builder.url(endpoint + path);
             builder.post(urlParamsBuilder.buildPostBody());
         }
         if (queryPara == null && bodyPara == null) {
+            path = basePath + path;
             buildHeader("GET", path, null);
-            builder.url(gwUrl + path);
+            builder.url(endpoint + path);
         }
         builder.headers(headersBuilder.build());
 
@@ -87,7 +96,7 @@ public class AccountClient extends HttpClient {
     private void buildHeader(String method, String path, Map para) {
         try {
             String ts = DateLocalUtil.toUTC();
-            String sign = HmacSHA256Base64Utils.sign(ts, method, this.basePath + path, para, this.ApiKey, this.SecretKeySha1);
+            String sign = HmacSHA256Base64Utils.sign(ts, method, path, para, this.ApiKey, this.SecretKeySha1);
             headersBuilder.set("ZB-TIMESTAMP", ts);
             headersBuilder.set("ZB-SIGN", sign);
         } catch (Exception e) {
