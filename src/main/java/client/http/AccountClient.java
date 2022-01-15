@@ -57,7 +57,7 @@ public class AccountClient extends HttpClient {
                 String symbol = para.get("symbol");
                 if (StringUtils.isNotBlank(symbol)) {
                     String[] currencies = symbol.split("_");
-                    if (!currencies[1].equalsIgnoreCase("USDT")) {
+                    if (!currencies[1].equalsIgnoreCase("USDT") && !currencies[1].equalsIgnoreCase("ZUSD")) {
                         path = "/" + currencies[1].toLowerCase() + path;
                     }
                 }
@@ -79,7 +79,7 @@ public class AccountClient extends HttpClient {
                 String symbol = para.get("symbol");
                 if (StringUtils.isNotBlank(symbol)) {
                     String[] currencies = symbol.split("_");
-                    if (!currencies[1].equalsIgnoreCase("USDT")) {
+                    if (!currencies[1].equalsIgnoreCase("USDT") && !currencies[1].equalsIgnoreCase("ZUSD")) {
                         path = "/" + currencies[1].toLowerCase() + path;
                     }
                 }
