@@ -252,7 +252,7 @@ public class MarketClient extends HttpClient {
 
         String contractType = "";
         String symbol = (String) param.get("symbol");
-        if (StringUtils.isNoneBlank(symbol)) {
+        if (StringUtils.isNotBlank(symbol)) {
             String[] currencies = symbol.split("_");
             if (!currencies[1].equalsIgnoreCase("USDT")) {
                 contractType = "/" + currencies[1].toLowerCase();

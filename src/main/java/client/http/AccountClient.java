@@ -9,6 +9,7 @@ import exception.SystemCode;
 import exception.ZbException;
 import okhttp3.Headers;
 import okhttp3.Request;
+import org.apache.commons.lang3.StringUtils;
 import sign.DateLocalUtil;
 import sign.EncryDigestUtil;
 import sign.HmacSHA256Base64Utils;
@@ -49,8 +50,18 @@ public class AccountClient extends HttpClient {
             para = mapObject2String(queryPara);
             Integer futuresAccountType = Integer.valueOf(para.get("futuresAccountType"));
             path = basePath + path;
-            if (futuresAccountType != null && futuresAccountType == 2)// Q本位合约
-                path = "/qc" + path;
+            if (futuresAccountType != null) {
+                if (futuresAccountType == 2)// Q本位合约
+                    path = "/qc" + path;
+            } else {
+                String symbol = para.get("symbol");
+                if (StringUtils.isNotBlank(symbol)) {
+                    String[] currencies = symbol.split("_");
+                    if (!currencies[1].equalsIgnoreCase("USDT")) {
+                        path = "/" + currencies[1].toLowerCase() + path;
+                    }
+                }
+            }
 
             buildHeader("GET", path, para);
             para.forEach((k, v) -> urlParamsBuilder.putToUrl(k, v));
@@ -61,8 +72,18 @@ public class AccountClient extends HttpClient {
             para = mapObject2String(bodyPara);
             Integer futuresAccountType = Integer.valueOf(para.get("futuresAccountType"));
             path = basePath + path;
-            if (futuresAccountType != null && futuresAccountType == 2)// Q本位合约
-                path = "/qc" + path;
+            if (futuresAccountType != null) {
+                if (futuresAccountType == 2)// Q本位合约
+                    path = "/qc" + path;
+            } else {
+                String symbol = para.get("symbol");
+                if (StringUtils.isNotBlank(symbol)) {
+                    String[] currencies = symbol.split("_");
+                    if (!currencies[1].equalsIgnoreCase("USDT")) {
+                        path = "/" + currencies[1].toLowerCase() + path;
+                    }
+                }
+            }
 
             buildHeader("POST", path, para);
             headersBuilder.add("Content-Type", "application/json");
