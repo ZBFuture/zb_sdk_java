@@ -12,17 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 class AccountClientTest {
+
+    public static void main(String[] args) {
+        System.out.println(11);
+    }
+
     @Test
     void Account() throws UnsupportedEncodingException, CloneNotSupportedException, InvalidKeyException {
         //online env
-//        String endpoint = "http://futures.zb.land";
-//        String apiKey = "3576549f-e1ce-4317-b83e-48f192cf9e23";
-//        String secretKey = "6ee95f06-0365-4e09-a9db-b38d2d7111b0";
+        String endpoint = "http://futures.zb.land";
+        String apiKey = "9807581e-992e-41ca-8fa4-639fbf1c939f";
+        String secretKey = "a7a15b46-eb08-431e-81e4-096bd12e2a48";
 
         //test env
-        String endpoint = "http://ttfutures.zb.com";
+        /*String endpoint = "http://ttfutures.zb.com";
         String apiKey = "8da1a454-2f07-48e7-b268-72582fb72794";
-        String secretKey = "d67355ca-3e20-41fc-8e14-bfdf506f72fc";
+        String secretKey = "d67355ca-3e20-41fc-8e14-bfdf506f72fc";*/
 
         String symbol = "ETH_USDT";
         String currency = constant.CURRENCY_USDT;
