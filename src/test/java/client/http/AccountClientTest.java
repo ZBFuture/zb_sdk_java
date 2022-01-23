@@ -33,6 +33,7 @@ class AccountClientTest {
         String currency = constant.CURRENCY_USDT;
         Integer futuresAccountType = constant.BASE_USDT;
 
+
         AccountClient accountClient = new AccountClient(endpoint, apiKey, secretKey);
 
         //------fund-------
