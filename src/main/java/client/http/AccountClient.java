@@ -48,7 +48,11 @@ public class AccountClient extends HttpClient {
         Map<String, String> para;
         if (queryPara != null) {
             para = mapObject2String(queryPara);
-            Integer futuresAccountType = Integer.valueOf(para.get("futuresAccountType"));
+            Integer futuresAccountType = null;
+            if (para.get("futuresAccountType") != null) {
+                futuresAccountType = Integer.valueOf(para.get("futuresAccountType"));
+            }
+
             path = basePath + path;
             if (futuresAccountType != null) {
                 if (futuresAccountType == 2)// Q本位合约
