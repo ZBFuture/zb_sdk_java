@@ -20,7 +20,7 @@ class AccountClientTest {
     @Test
     void Account() throws UnsupportedEncodingException, CloneNotSupportedException, InvalidKeyException {
         //online env
-        String endpoint = "http://futures.zb.land";
+        String endpoint = "http://fapi.zb.com";
         String apiKey = "9807581e-992e-41ca-8fa4-639fbf1c939f";
         String secretKey = "a7a15b46-eb08-431e-81e4-096bd12e2a48";
 
